@@ -33,6 +33,15 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-dialogflow</artifactId>
+            <version>v2beta1-rev15-1.23.0</version>
+        </dependency>
     </dependencies>
 
     <build>
