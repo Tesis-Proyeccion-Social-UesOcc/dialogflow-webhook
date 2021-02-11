@@ -5,18 +5,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.lang.NonNull;
 import sv.edu.ues.webhook.services.Handler;
-import sv.edu.ues.webhook.annotations.IntentHandler;
 
-public class IntentHandlerScanner implements BeanPostProcessor {
+public class IntentHandlerScanner implements BeanPostProcessor, ApplicationContextAware {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+    private ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
+        // only looking for component that are intent handlers, otherwise, skip
         if(!(bean instanceof Handler)){
             return bean;
         }
@@ -31,7 +39,10 @@ public class IntentHandlerScanner implements BeanPostProcessor {
             logger.warn("No @IntentHandler annotations found on current component: {}", currentBeanClass.getSimpleName());
         }
         else{
-            logger.info(String.valueOf(annotatedMethods));
+            var invoker = this.applicationContext.getBean(Invoker.class);
+            for(var entry: annotatedMethods.entrySet()){
+                invoker.addMapping(entry.getKey(), (Handler) bean, entry.getValue().value());
+            }
         }
         return bean;
     }
