@@ -36,7 +36,7 @@ public class IntentHandlerScanner implements BeanPostProcessor, ApplicationConte
         var annotatedMethods = MethodIntrospector.selectMethods(currentBeanClass, metadataLookup);
 
         if(annotatedMethods.isEmpty()){
-            logger.warn("No @IntentHandler annotations found on current component: {}", currentBeanClass.getSimpleName());
+            logger.warn("No @IntentHandler annotations found on current handler: {}", currentBeanClass.getSimpleName());
         }
         else{
             var invoker = this.applicationContext.getBean(Invoker.class);
