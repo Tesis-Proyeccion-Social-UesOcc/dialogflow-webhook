@@ -13,5 +13,5 @@ public @interface IntentHandler {
     String value() default "";
 
     @AliasFor("value")
-    String handler() default "";
+    String intent() default "";
 }
