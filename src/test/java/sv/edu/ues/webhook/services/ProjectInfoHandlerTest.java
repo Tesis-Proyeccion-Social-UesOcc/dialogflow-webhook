@@ -7,7 +7,9 @@ import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2W
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -75,10 +77,28 @@ class ProjectInfoHandlerTest {
     }
 
     @Test
+    void externalCallWithException(){
+        var baseUrl = "http://www.google.com/";
+        this.setWithReflection(baseUrl);
+        var response = new GoogleCloudDialogflowV2WebhookResponse();
+        Mockito.when(this.client.getForObject(Mockito.anyString(), ArgumentMatchers.eq(JsonNode.class)))
+                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+        this.handler.externalCall(response);
+        assertTrue(response.getFulfillmentText().contains("Algo anda mal"));
+
+    }
+
+    @Test
     void getExternalResourceUrl() {
-        var baseUrl = "http://www.google.com";
-        ReflectionTestUtils.setField(handler, "baseUrl", baseUrl);
+        var baseUrl = "http://www.google.com/";
+        this.setWithReflection(baseUrl);
         var result = handler.getExternalResourceUrl();
-        assertEquals(result, baseUrl + "/proyectos?page=0&size=5&status=2");
+        assertEquals(result, baseUrl + "estudiantes/zh15002/proyectos?page=0&size=5&status=2");
+    }
+
+    private void setWithReflection(String baseUrl){
+        ReflectionTestUtils.setField(handler, "baseUrl", baseUrl);
+        ReflectionTestUtils.setField(handler, "carnet", "zh15002");
+        ReflectionTestUtils.setField(handler, "status", "proceso");
     }
 }
