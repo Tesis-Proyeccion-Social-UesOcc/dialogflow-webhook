@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ProjectInfoHandler implements ExternalResourcesHandler {
+public class ProjectInfoService implements ExternalResourcesHandler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -28,11 +28,12 @@ public class ProjectInfoHandler implements ExternalResourcesHandler {
     private String status;
     private String carnet;
 
-    public ProjectInfoHandler(RestTemplate client) {
+    public ProjectInfoService(RestTemplate client) {
         this.client = client;
     }
 
     @IntentHandler(intent = "InformacionProyectos")
+    @Override
     public void handle(GoogleCloudDialogflowV2WebhookResponse response, Map<String, Object> params) {
         logger.info("Resolving request for InformacionProyectos, current params: {}", params);
 
@@ -42,7 +43,7 @@ public class ProjectInfoHandler implements ExternalResourcesHandler {
         if (status == null || status.isBlank()) {
             var options = List.of("Pendiente", "En proceso", "Completado", "Rechazado");
             var replies = new GoogleCloudDialogflowV2IntentMessageQuickReplies();
-            replies.setTitle("Seleccione el estado del proyecto del que dese informacion");
+            replies.setTitle("Seleccione el estado del proyecto del que desea informacion");
             replies.setQuickReplies(options);
 
             var messages = new GoogleCloudDialogflowV2IntentMessage();

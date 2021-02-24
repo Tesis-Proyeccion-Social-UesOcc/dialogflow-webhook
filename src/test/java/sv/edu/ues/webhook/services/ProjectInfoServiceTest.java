@@ -17,13 +17,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProjectInfoHandlerTest {
+class ProjectInfoServiceTest {
 
     @Mock
     private RestTemplate client;
 
     @InjectMocks
-    private ProjectInfoHandler handler;
+    private ProjectInfoService handler;
 
     @BeforeEach
     void setUp(){
