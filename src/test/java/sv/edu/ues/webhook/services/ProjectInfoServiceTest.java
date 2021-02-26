@@ -40,7 +40,7 @@ class ProjectInfoServiceTest {
         var message = messages.get(0);
         var replies = message.getQuickReplies();
         assertEquals(1, messages.size());
-        assertEquals(replies.getTitle(), "Seleccione el estado del proyecto del que dese informacion");
+        assertEquals(replies.getTitle(), "Seleccione el estado del proyecto del que desea informacion");
         assertEquals(replies.getQuickReplies(), List.of("Pendiente", "En proceso", "Completado", "Rechazado"));
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import sv.edu.ues.webhook.annotations.IntentHandler;
+import sv.edu.ues.webhook.utils.QuickRepliesBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -83,12 +84,12 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
         logger.info("Resolving request for DocumentosIndividuales, current params: {}", params);
         docName = (String) params.get("documento");
         if(docName.isBlank() || docName == null){
-            var options = List.of("Formularios generales", "Carta para tutores",
-                                            "Carta de compromiso", "Declaración jurada", "Solicitud de cambio de tutor");
+            var options = List.of();
 
-            var replies = new GoogleCloudDialogflowV2IntentMessageQuickReplies();
-            replies.setTitle("Seleccione el documento que necesita");
-            replies.setQuickReplies(options);
+            var replies = QuickRepliesBuilder
+                    .build("Seleccione el documento que necesita",
+                            "Formularios generales", "Carta para tutores",
+                                    "Carta de compromiso", "Declaración jurada", "Solicitud de cambio de tutor");
 
             var messages = new GoogleCloudDialogflowV2IntentMessage();
             messages.setQuickReplies(replies);
