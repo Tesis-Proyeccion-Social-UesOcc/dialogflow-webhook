@@ -2,7 +2,6 @@ package sv.edu.ues.webhook.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2IntentMessage;
-import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2IntentMessageQuickReplies;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2WebhookResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import sv.edu.ues.webhook.annotations.IntentHandler;
-import sv.edu.ues.webhook.utils.Mappers;
+import sv.edu.ues.webhook.utils.General;
 import sv.edu.ues.webhook.utils.QuickRepliesBuilder;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class ProjectInfoService implements ExternalResourcesHandler {
 
     @Override
     public String getExternalResourceUrl() {
-        var statusId = Mappers.statuses.get(status);
+        var statusId = General.STATUSES.get(status);
         return UriComponentsBuilder.fromUriString(this.baseUrl)
                 .path("estudiantes/")
                 .path(carnet)
