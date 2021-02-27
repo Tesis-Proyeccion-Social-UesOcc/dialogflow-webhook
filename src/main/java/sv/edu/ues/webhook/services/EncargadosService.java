@@ -6,6 +6,7 @@ import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2W
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,13 +17,14 @@ import sv.edu.ues.webhook.utils.QuickRepliesBuilder;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class EncargadosService implements ExternalResourcesHandler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Value("${external_resource.url_base}")
-    private String baseurl;
+    private String baseUrl;
     private String area;
     private final RestTemplate client;
 
@@ -33,7 +35,7 @@ public class EncargadosService implements ExternalResourcesHandler {
     @Override
     public String getExternalResourceUrl() {
         return UriComponentsBuilder
-                .fromUriString(baseurl)
+                .fromUriString(baseUrl)
                 .path("personal/encargado")
                 .queryParam("area", area)
                 .toUriString();
@@ -51,15 +53,17 @@ public class EncargadosService implements ExternalResourcesHandler {
         }
         assert clientResponse != null;
         var message = clientResponse.get("message");
-        if(message.isEmpty()) {
-            var responseText = String
-                    .format("Encargado/a del area %s:\n\n%s %s\nHorario de atencion: %s\nNormalmente puede encontrarlo en %s",
-                            clientResponse.get("departamento").asText(),
-                            clientResponse.get("nombre").asText(),
-                            clientResponse.get("apellido").asText(),
-                            clientResponse.get("horario").asText(),
-                            clientResponse.get("ubicacion").asText());
-            response.setFulfillmentText(responseText);
+        if(message == null) {
+            var areaName = area.equals("general") ? "general" : clientResponse.get("departamento").asText();
+                var responseText = String
+                        .format("Encargado/a del area %s:\n\n%s %s\nHorario de atencion: %s\nNormalmente puede encontrarlo en %s",
+                                areaName,
+                                clientResponse.get("nombre").asText(),
+                                clientResponse.get("apellido").asText(),
+                                clientResponse.get("horario").asText(),
+                                clientResponse.get("ubicacion").asText());
+                response.setFulfillmentText(responseText);
+
         }
         else
             response.setFulfillmentText(message.asText());
@@ -69,7 +73,7 @@ public class EncargadosService implements ExternalResourcesHandler {
     @IntentHandler(intent = "InformacionEncargados")
     public void handle(GoogleCloudDialogflowV2WebhookResponse response, Map<String, Object> params) {
         logger.info("Resolving request for InformacionEncargados, current params: {}", params);
-        area = (String) params.get("departamento");
+        area = (String) params.get("area");
         if(area.isBlank()){
             var replies = QuickRepliesBuilder
                     .build("De que area en el encargado del que solicita informacion?", General.AREA_OPTIONS);
