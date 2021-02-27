@@ -72,7 +72,7 @@ public class EncargadosService implements ExternalResourcesHandler {
         area = (String) params.get("departamento");
         if(area.isBlank()){
             var replies = QuickRepliesBuilder
-                    .build("De cual encargado desea informacion?", General.AREAS);
+                    .build("De que area en el encargado del que solicita informacion?", General.AREA_OPTIONS);
             var messages = new GoogleCloudDialogflowV2IntentMessage();
             messages.setQuickReplies(replies);
             messages.setPlatform(PLATFORM);
