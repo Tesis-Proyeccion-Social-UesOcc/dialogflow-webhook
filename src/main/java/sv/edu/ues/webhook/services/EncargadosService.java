@@ -56,17 +56,21 @@ public class EncargadosService implements ExternalResourcesHandler {
         if(message == null) {
             var areaName = area.equals("general") ? "general" : clientResponse.get("departamento").asText();
                 var responseText = String
-                        .format("Encargado/a del area %s:\n\n%s %s\nHorario de atencion: %s\nNormalmente puede encontrarlo en %s",
+                        .format("Encargado(a) del área %s:\n\n%s %s\n\nHorario de atención:\n%s\n\nNormalmente puede encontrarlo(a) en %s, o puede contactarlo al correo %s",
                                 areaName,
                                 clientResponse.get("nombre").asText(),
                                 clientResponse.get("apellido").asText(),
                                 clientResponse.get("horario").asText(),
-                                clientResponse.get("ubicacion").asText());
+                                clientResponse.get("ubicacion").asText().toLowerCase(),
+                                clientResponse.get("email").asText());
                 response.setFulfillmentText(responseText);
 
         }
-        else
+        else {
+
             response.setFulfillmentText(message.asText());
+
+        }
     }
 
     @Override
@@ -76,9 +80,10 @@ public class EncargadosService implements ExternalResourcesHandler {
         area = (String) params.get("area");
         if(area.isBlank()){
             var replies = QuickRepliesBuilder
-                    .build("De que area en el encargado del que solicita informacion?", General.AREA_OPTIONS);
+                    .build("¿De que área es el encargado del que solicita información?", General.AREA_OPTIONS);
             var messages = new GoogleCloudDialogflowV2IntentMessage();
             messages.setQuickReplies(replies);
+
             messages.setPlatform(PLATFORM);
             response.setFulfillmentMessages(List.of(messages));
         }

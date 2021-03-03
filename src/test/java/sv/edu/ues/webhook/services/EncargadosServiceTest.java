@@ -41,7 +41,8 @@ class EncargadosServiceTest {
     @Test
     void externalCallWithNonexistentMessageNode() throws JsonProcessingException {
         var response = new GoogleCloudDialogflowV2WebhookResponse();
-        var body = "{\"departamento\": \"general\", \"nombre\": \"Chris\", \"apellido\": \"Nolan\", \"horario\":\"4-10\", \"ubicacion\":\"ues\"}";
+        var body = "{\"departamento\": \"general\", \"nombre\": \"Chris\", \"apellido\": \"Nolan\"," +
+                " \"horario\":\"4-10\", \"ubicacion\":\"ues\", \"email\": \"some@gmail.com\"}";
         var result = new ObjectMapper().readTree(body);
         Mockito.when(client.getForObject(Mockito.anyString(), ArgumentMatchers.eq(JsonNode.class))).thenReturn(result);
         service.externalCall(response);
@@ -51,6 +52,7 @@ class EncargadosServiceTest {
         assertTrue(text.contains("Nolan"));
         assertTrue(text.contains("4-10"));
         assertTrue(text.contains("ues"));
+        assertTrue(text.contains("some@gmail.com"));
     }
 
     @Test
@@ -71,7 +73,7 @@ class EncargadosServiceTest {
         service.handle(response, params);
         var messages = response.getFulfillmentMessages();
         assertEquals(1, messages.size());
-        assertTrue(messages.get(0).getQuickReplies().getTitle().contains("De que area"));
+        assertTrue(messages.get(0).getQuickReplies().getTitle().contains("¿De que área"));
         assertEquals(List.of(General.AREA_OPTIONS),  messages.get(0).getQuickReplies().getQuickReplies());
 
     }

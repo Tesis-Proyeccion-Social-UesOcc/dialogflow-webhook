@@ -43,7 +43,7 @@ public class ProjectInfoService implements ExternalResourcesHandler {
         if (status == null || status.isBlank()) {
 
             var replies = QuickRepliesBuilder
-                    .build("Seleccione el estado del proyecto del que desea informacion", General.STATUS_OPTIONS);
+                    .build("Seleccione el estado del proyecto del que desea información", General.STATUS_OPTIONS);
 
             var messages = new GoogleCloudDialogflowV2IntentMessage();
             messages.setQuickReplies(replies);

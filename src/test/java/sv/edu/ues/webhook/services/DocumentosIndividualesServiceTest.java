@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
+import sv.edu.ues.webhook.utils.General;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,6 @@ class DocumentosIndividualesServiceTest {
         var replies = message.getQuickReplies();
         assertEquals(1, messages.size());
         assertEquals(replies.getTitle(), "Seleccione el documento que necesita");
-        assertEquals(replies.getQuickReplies(), List.of("Formularios generales", "Carta para tutores",
-                "Carta de compromiso", "Declaración jurada", "Solicitud de cambio de tutor"));
+        assertEquals(replies.getQuickReplies(), List.of(General.DOCUMENT_OPTIONS));
     }
 }
