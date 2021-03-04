@@ -2,7 +2,6 @@ package sv.edu.ues.webhook.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2IntentMessage;
-import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2IntentMessageQuickReplies;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2WebhookResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import sv.edu.ues.webhook.annotations.IntentHandler;
-import sv.edu.ues.webhook.utils.Mappers;
+import sv.edu.ues.webhook.utils.General;
+import sv.edu.ues.webhook.utils.QuickRepliesBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -41,10 +41,9 @@ public class ProjectInfoService implements ExternalResourcesHandler {
         carnet = (String) params.get("carnet");
 
         if (status == null || status.isBlank()) {
-            var options = List.of("Pendiente", "En proceso", "Completado", "Rechazado");
-            var replies = new GoogleCloudDialogflowV2IntentMessageQuickReplies();
-            replies.setTitle("Seleccione el estado del proyecto del que desea informacion");
-            replies.setQuickReplies(options);
+
+            var replies = QuickRepliesBuilder
+                    .build("Seleccione el estado del proyecto del que desea información", General.STATUS_OPTIONS);
 
             var messages = new GoogleCloudDialogflowV2IntentMessage();
             messages.setQuickReplies(replies);
@@ -59,7 +58,7 @@ public class ProjectInfoService implements ExternalResourcesHandler {
 
     @Override
     public String getExternalResourceUrl() {
-        var statusId = Mappers.statuses.get(status);
+        var statusId = General.STATUSES.get(status);
         return UriComponentsBuilder.fromUriString(this.baseUrl)
                 .path("estudiantes/")
                 .path(carnet)

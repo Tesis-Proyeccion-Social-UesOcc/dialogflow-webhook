@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import sv.edu.ues.webhook.utils.General;
 
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,8 @@ class ProjectInfoServiceTest {
         var message = messages.get(0);
         var replies = message.getQuickReplies();
         assertEquals(1, messages.size());
-        assertEquals(replies.getTitle(), "Seleccione el estado del proyecto del que dese informacion");
-        assertEquals(replies.getQuickReplies(), List.of("Pendiente", "En proceso", "Completado", "Rechazado"));
+        assertEquals(replies.getTitle(), "Seleccione el estado del proyecto del que desea información");
+        assertEquals(replies.getQuickReplies(), List.of(General.STATUS_OPTIONS));
     }
 
     @Test
