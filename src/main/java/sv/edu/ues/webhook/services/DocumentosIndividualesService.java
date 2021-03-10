@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import sv.edu.ues.webhook.annotations.IntentHandler;
 import sv.edu.ues.webhook.utils.General;
+import sv.edu.ues.webhook.utils.PayloadBuilder;
 import sv.edu.ues.webhook.utils.QuickRepliesBuilder;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
                 .toUriString();
     }
 
-    /**{
+    /* {
      "facebook": {
         "attachment": {
             "type": "file",
@@ -62,18 +63,14 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
             clientResponse = client.getForObject(this.getExternalResourceUrl(), JsonNode.class);
         }catch (HttpClientErrorException e){
             logger.error(e.getMessage());
-            response.setFulfillmentText("Algo anda mal, por favor intenta en unos minutos");
+            response.setFulfillmentText("Algo anda mal, por favor intente en unos minutos");
             return;
         }
         assert clientResponse!= null;
         var result = clientResponse.get("result");
         Map<String, Object> payload = null;
         for(var doc: result){
-            payload =
-                    Map.of("facebook",
-                            Map.of("attachment",
-                                    Map.of("type", "file", "payload",
-                                            Map.of("url", doc.get("uri")))));
+            payload = PayloadBuilder.build(doc.get("uri").toString());
         }
         var messages = new GoogleCloudDialogflowV2IntentMessage();
         messages.setPayload(payload).setPlatform(PLATFORM);
@@ -85,7 +82,6 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
         logger.info("Resolving request for DocumentosIndividuales, current params: {}", params);
         docName = (String) params.get("documento");
         if(docName.isBlank() || docName == null){
-            var options = List.of();
 
             var replies = QuickRepliesBuilder
                     .build("Seleccione el documento que necesita", General.DOCUMENT_OPTIONS);
