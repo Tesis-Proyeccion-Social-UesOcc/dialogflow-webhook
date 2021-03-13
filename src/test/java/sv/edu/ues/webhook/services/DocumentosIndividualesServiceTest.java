@@ -53,7 +53,7 @@ class DocumentosIndividualesServiceTest {
         var obj1 = (Map)((Map)payload.get("facebook")).get("attachment");
         var obj2 = (TextNode)((Map)obj1.get("payload")).get("url");
         assertEquals(1, messages.size());
-        assertEquals("\""+uri+"\"", obj2.toString());
+        assertEquals(uri, obj2.asText());
 
     }
 
