@@ -52,7 +52,7 @@ public class CertificadoService implements ExternalResourcesHandler {
 
         var message = clientResponse.get("message");
         if(message == null) {
-            var payload = PayloadBuilder.build(clientResponse.get("uri").toString());
+            var payload = PayloadBuilder.build(clientResponse.get("uri"));
 
             var messages = new GoogleCloudDialogflowV2IntentMessage();
             messages.setPayload(payload).setPlatform(PLATFORM);
@@ -65,8 +65,9 @@ public class CertificadoService implements ExternalResourcesHandler {
     @Override
     @IntentHandler(intent = "Certificado")
     public void handle(GoogleCloudDialogflowV2WebhookResponse response, Map<String, Object> params) {
-        carnet = (String) params.get("proyecto");
-        projectName = (String) params.get("carnet");
+        logger.info("Resolving request for Certificado, current params: {}", params);
+        carnet = (String) params.get("carnet");
+        projectName = (String) params.get("proyecto");
         if(!carnet.isBlank() && !projectName.isBlank())
             this.externalCall(response);
     }

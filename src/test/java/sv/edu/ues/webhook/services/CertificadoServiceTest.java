@@ -3,6 +3,7 @@ package sv.edu.ues.webhook.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2WebhookResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,9 +66,9 @@ class CertificadoServiceTest {
         var messages = response.getFulfillmentMessages();
         var payload = messages.get(0).getPayload();
         var obj1 = (Map)((Map)payload.get("facebook")).get("attachment");
-        var obj2 = (String)((Map)obj1.get("payload")).get("url");
+        var obj2 = (TextNode)((Map)obj1.get("payload")).get("url");
         assertEquals(1, messages.size());
-        assertEquals("\""+url+"\"", obj2);
+        assertEquals(url, obj2.asText());
     }
 
     @Test
