@@ -90,7 +90,6 @@ public class ProjectInfoService implements ExternalResourcesHandler {
         }
         else{
             var builder = new StringBuilder();
-            builder.append("Proyectos con el estado proporcionado:\n");
             for(var node: content){
                 builder.append(node.get("nombre").asText()).append("\n")
                         .append("Duracion: ").append(node.get("duracion")).append(" horas\n")
@@ -102,6 +101,28 @@ public class ProjectInfoService implements ExternalResourcesHandler {
                     if(flag) builder.append(", ");
                     builder.append(estudiantes.get("carnet").asText());
                     flag = true;
+                }
+                var docs = node.get("documentos");
+                if(docs != null) {
+                    if(!docs.isEmpty()) {
+                        builder.append("\n");
+                        builder.append("Estado de los documentos requeridos:\n");
+                        for (var documento : docs) {
+                            var msg1 = "";
+                            if(documento.get("entregado").asBoolean()) {
+                                var msg2 = documento.get("aprobado").asBoolean() ? "aprobado" : "sin aprobar";
+                                msg1 = "entregado y "+msg2 ;
+                            }
+                            else msg1 = "sin entregar";
+
+                            var formattedStr =
+                                    String.format("- %s, %s%n",
+                                            documento.get("nombre").asText().toUpperCase(),
+                                            msg1);
+                            builder.append(formattedStr);
+
+                        }
+                    }
                 }
                 builder.append("\n\n");
             }
