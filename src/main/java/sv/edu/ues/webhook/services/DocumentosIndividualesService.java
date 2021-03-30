@@ -39,7 +39,7 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
     @Override
     public String getExternalResourceUrl() {
         return UriComponentsBuilder.fromUriString(baseUrl)
-                .path("documentos/")
+                .path("plantillas/")
                 .path("nombre/")
                 .path(docName)
                 .toUriString();
