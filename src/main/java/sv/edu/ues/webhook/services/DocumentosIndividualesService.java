@@ -2,7 +2,6 @@ package sv.edu.ues.webhook.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2IntentMessage;
-import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2IntentMessageQuickReplies;
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2WebhookResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +69,7 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
         var result = clientResponse.get("result");
         Map<String, Object> payload = null;
         for(var doc: result){
-            payload = PayloadBuilder.build(doc.get("uri"));
+            payload = PayloadBuilder.buildForAttachment(doc.get("uri"));
         }
         var messages = new GoogleCloudDialogflowV2IntentMessage();
         messages.setPayload(payload).setPlatform(PLATFORM);

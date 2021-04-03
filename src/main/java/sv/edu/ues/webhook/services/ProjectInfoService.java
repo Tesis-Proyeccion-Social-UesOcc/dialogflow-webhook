@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import sv.edu.ues.webhook.annotations.IntentHandler;
 import sv.edu.ues.webhook.utils.General;
+import sv.edu.ues.webhook.utils.PayloadBuilder;
 import sv.edu.ues.webhook.utils.QuickRepliesBuilder;
 
 import java.util.List;
@@ -91,40 +92,7 @@ public class ProjectInfoService implements ExternalResourcesHandler {
         else{
             var builder = new StringBuilder();
             for(var node: content){
-                builder.append(node.get("nombre").asText()).append("\n")
-                        .append("Duracion: ").append(node.get("duracion")).append(" horas\n")
-                        .append(node.get("interno").asBoolean()? "Proyecto de tipo interno\n":"Proyecto de tipo externo\n")
-                        .append("Tutor: ").append(node.get("personal").asText()).append("\n");
-                builder.append("Estudiantes en el proyecto: ");
-                var flag = false;
-                for(var estudiantes: node.get("estudiantes")){
-                    if(flag) builder.append(", ");
-                    builder.append(estudiantes.get("carnet").asText());
-                    flag = true;
-                }
-                var docs = node.get("documentos");
-                if(docs != null) {
-                    if(!docs.isEmpty()) {
-                        builder.append("\n");
-                        builder.append("Estado de los documentos requeridos:\n");
-                        for (var documento : docs) {
-                            var msg1 = "";
-                            if(documento.get("entregado").asBoolean()) {
-                                var msg2 = documento.get("aprobado").asBoolean() ? "aprobado" : "sin aprobar";
-                                msg1 = "entregado y "+msg2 ;
-                            }
-                            else msg1 = "sin entregar";
-
-                            var formattedStr =
-                                    String.format("- %s, %s%n",
-                                            documento.get("nombre").asText().toUpperCase(),
-                                            msg1);
-                            builder.append(formattedStr);
-
-                        }
-                    }
-                }
-                builder.append("\n\n");
+                PayloadBuilder.buildForProjectInfo(node, builder);
             }
             response.setFulfillmentText(builder.toString());
         }
