@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import sv.edu.ues.webhook.annotations.IntentHandler;
 import sv.edu.ues.webhook.utils.PayloadBuilder;
 
 import java.util.Map;
@@ -32,7 +33,7 @@ public class SingleProjectByNameService implements ExternalResourcesHandler{
         return UriComponentsBuilder.fromUriString(baseUrl)
                 .path("estudiantes/")
                 .path(carnet)
-                .path("/proyectos")
+                .path("/proyectos/single")
                 .queryParam("projectName", projectName)
                 .toUriString();
     }
@@ -62,6 +63,7 @@ public class SingleProjectByNameService implements ExternalResourcesHandler{
     }
 
     @Override
+    @IntentHandler(intent = "SingleProjectInformation")
     public void handle(GoogleCloudDialogflowV2WebhookResponse response, Map<String, Object> params) {
         logger.info("Resolving request for SingleProjectByNameService, current params: {}", params);
         carnet = (String) params.get("carnet");

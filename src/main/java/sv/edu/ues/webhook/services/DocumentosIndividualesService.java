@@ -69,7 +69,7 @@ public class DocumentosIndividualesService implements ExternalResourcesHandler{
         var result = clientResponse.get("result");
         Map<String, Object> payload = null;
         for(var doc: result){
-            payload = PayloadBuilder.buildForAttachment(doc.get("uri"));
+            payload = PayloadBuilder.buildForAttachment(doc.get("url"));
         }
         var messages = new GoogleCloudDialogflowV2IntentMessage();
         messages.setPayload(payload).setPlatform(PLATFORM);
