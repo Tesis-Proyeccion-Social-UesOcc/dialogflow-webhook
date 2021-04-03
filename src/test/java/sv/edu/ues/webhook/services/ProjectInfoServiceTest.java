@@ -67,14 +67,36 @@ class ProjectInfoServiceTest {
         ReflectionTestUtils.setField(handler, "baseUrl", "http://www.google.com");
         handler.handle(response, map);
 
-        assertTrue(response.getFulfillmentText().contains("Proyectos con el estado proporcionado:"));
         assertTrue(response.getFulfillmentText().contains("Duracion"));
         assertTrue(response.getFulfillmentText().contains("Estudiantes en el proyecto:"));
         assertTrue(response.getFulfillmentText().contains("zh15002"));
         assertTrue(response.getFulfillmentText().contains("250"));
         assertTrue(response.getFulfillmentText().contains("Proyecto de tipo interno"));
-        assertTrue(response.getFulfillmentText().contains("Proyectos con el estado proporcionado:"));
         assertTrue(response.getFulfillmentText().contains("Luis Salazar"));
+        assertFalse(response.getFulfillmentText().contains("Estado de los documentos requeridos"));
+    }
+
+    @Test
+    void handleWithAllArgsAndDocuments() throws JsonProcessingException {
+        var map = Map.of("estado", "pendiente", "carnet", (Object)"zh15002");
+        var response = new GoogleCloudDialogflowV2WebhookResponse();
+        var json = "{\"content\": [" +
+                "{\"nombre\": \"Test\", \"duracion\": 250, \"interno\": true, \"personal\": \"Luis Salazar\", \"estudiantes\": " +
+                "[{\"carnet\": \"zh15002\"}], \"documentos\": [{\"nombre\": \"doc1\", \"entregado\": true, \"aprobado\": false}]}]}";
+
+        var body = new ObjectMapper().readTree(json);
+        Mockito.when(this.client.getForObject(Mockito.anyString(), ArgumentMatchers.eq(JsonNode.class))).thenReturn(body);
+        ReflectionTestUtils.setField(handler, "baseUrl", "http://www.google.com");
+        handler.handle(response, map);
+
+        assertTrue(response.getFulfillmentText().contains("Duracion"));
+        assertTrue(response.getFulfillmentText().contains("Estudiantes en el proyecto:"));
+        assertTrue(response.getFulfillmentText().contains("zh15002"));
+        assertTrue(response.getFulfillmentText().contains("250"));
+        assertTrue(response.getFulfillmentText().contains("Proyecto de tipo interno"));
+        assertTrue(response.getFulfillmentText().contains("Luis Salazar"));
+        assertTrue(response.getFulfillmentText().contains("Estado de los documentos requeridos"));
+        assertTrue(response.getFulfillmentText().contains("entregado y sin aprobar"));
     }
 
     @Test

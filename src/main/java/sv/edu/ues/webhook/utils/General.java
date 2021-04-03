@@ -4,8 +4,9 @@ import java.util.Map;
 
 public class General {
 
-    public static final Map<String, Integer> STATUSES = Map.of("pendiente", 1, "proceso", 2, "completado", 3, "rechazado", 4);
-    public static final String[] STATUS_OPTIONS = {"Pendiente", "En proceso", "Completado", "Rechazado"};
+    public static final Map<String, Integer> STATUSES = Map.of("pendiente", 1, "proceso", 2, "completo",
+            3, "rechazado", 4, "retirado", 5);
+    public static final String[] STATUS_OPTIONS = {"Pendiente", "En proceso", "Completado", "Rechazado", "Retiro"};
     public static final String[] AREA_OPTIONS =
             {"Ingeniería", "Arquitectura", "Ciencias sociales", "Filosofía y letras", "Idiomas", "Medicina",
                     "Ciencias jurídicas", "Ciencias económicas", "Química", "Biología", "Física", "Matemática", "General"};
