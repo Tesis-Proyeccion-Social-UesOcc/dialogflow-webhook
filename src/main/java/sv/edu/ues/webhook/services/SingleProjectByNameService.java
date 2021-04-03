@@ -5,6 +5,7 @@ import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2W
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -13,6 +14,7 @@ import sv.edu.ues.webhook.utils.PayloadBuilder;
 
 import java.util.Map;
 
+@Service
 public class SingleProjectByNameService implements ExternalResourcesHandler{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
