@@ -35,7 +35,7 @@ class DocumentosIndividualesServiceTest {
         var base = "https://www.google.com/";
         ReflectionTestUtils.setField(service, "baseUrl", base);
         ReflectionTestUtils.setField(service, "docName", "ficha inscripcion");
-        assertEquals(base + "documentos/nombre/ficha%20inscripcion", service.getExternalResourceUrl());
+        assertEquals(base + "plantillas/nombre/ficha%20inscripcion", service.getExternalResourceUrl());
     }
 
     @Test
@@ -44,7 +44,7 @@ class DocumentosIndividualesServiceTest {
         ReflectionTestUtils.setField(service, "baseUrl", "anything");
         ReflectionTestUtils.setField(service, "docName", "anything");
         var uri = "www.someurl.com";
-        var body = "{\"result\": [{\"uri\":\""+uri+"\"}]}";
+        var body = "{\"result\": [{\"url\":\""+uri+"\"}]}";
         var node = new ObjectMapper().readTree(body);
         Mockito.when(template.getForObject(Mockito.anyString(), ArgumentMatchers.eq(JsonNode.class))).thenReturn(node);
         service.externalCall(response);
