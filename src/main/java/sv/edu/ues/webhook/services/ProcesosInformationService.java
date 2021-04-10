@@ -53,16 +53,21 @@ public class ProcesosInformationService implements ExternalResourcesHandler{
         else{
             var builder = new StringBuilder("Calendarización de procesos:\n\n");
             for(var proceso: content){
+                var desc = proceso.get("descripcion");
                 builder.append(proceso.get("nombre").asText().toUpperCase())
                         .append("\n")
-                        .append(proceso.get("descripcion").asText())
-                        .append("\n")
-                        .append("Calendarizacion de entregas: ")
+                        .append(proceso.get("descripcion").asText());
+                if(!desc.isEmpty())
+                    builder.append("\n");
+
+                builder.append("Calendarizacion de entregas: ")
                         .append(proceso.get("fechaInicio").asText())
                         .append(" / ")
                         .append(proceso.get("fechaFin").asText())
                         .append("\n\n");
             }
+            builder.append("Nota: Los documentos deben presentarse en PDF, siguiendo el siguiente formato:\n " +
+                    "[Nombre_documento]-[Carnet]-[Carrera].pdf (omitir los corchetes).");
             response.setFulfillmentText(builder.toString());
         }
     }

@@ -50,5 +50,6 @@ class ProcesosInformationServiceTest {
         assertTrue(text.contains("desc"));
         assertTrue(text.contains("Calendarizacion de entregas"));
         assertTrue(text.contains("2021-04-01 / 2021-04-15"));
+        assertTrue(text.contains("Los documentos deben presentarse en PDF"));
     }
 }
