@@ -48,7 +48,7 @@ public class EncargadosService implements ExternalResourcesHandler {
             clientResponse = client.getForObject(getExternalResourceUrl(), JsonNode.class);
         }catch (HttpClientErrorException e){
             logger.error(e.getMessage());
-            response.setFulfillmentText("Algo anda mal, por favor intenta en unos minutos");
+            response.setFulfillmentText("Algo anda mal, por favor intente en unos minutos");
             return;
         }
         assert clientResponse != null;
