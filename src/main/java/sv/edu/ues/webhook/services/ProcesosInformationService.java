@@ -53,13 +53,12 @@ public class ProcesosInformationService implements ExternalResourcesHandler{
         else{
             var builder = new StringBuilder("Calendarización de procesos:\n\n");
             for(var proceso: content){
-                var desc = proceso.get("descripcion");
+                var desc = proceso.get("descripcion").asText();
                 builder.append(proceso.get("nombre").asText().toUpperCase())
                         .append("\n")
-                        .append(proceso.get("descripcion").asText());
-                if(!desc.isEmpty())
-                    builder.append("\n");
-
+                        .append(desc);
+                if(!desc.isBlank())
+                    builder.append("\n\n");
                 builder.append("Calendarizacion de entregas: ")
                         .append(proceso.get("fechaInicio").asText())
                         .append(" / ")
@@ -75,6 +74,7 @@ public class ProcesosInformationService implements ExternalResourcesHandler{
     @Override
     @IntentHandler(intent = "InfoProcesos")
     public void handle(GoogleCloudDialogflowV2WebhookResponse response, Map<String, Object> params) {
+        logger.info("Resolving");
         this.externalCall(response);
     }
 }
