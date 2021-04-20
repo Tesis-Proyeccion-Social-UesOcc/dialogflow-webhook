@@ -57,7 +57,7 @@ public class SingleProjectByNameService implements ExternalResourcesHandler{
         var message = clientResponse.get("message");
         if(message == null) {
             var builder = new StringBuilder();
-            PayloadBuilder.buildForProjectInfo(clientResponse, builder);
+            PayloadBuilder.buildForProjectInfo(clientResponse, builder, carnet, false);
             response.setFulfillmentText(builder.toString());
         }
         else
