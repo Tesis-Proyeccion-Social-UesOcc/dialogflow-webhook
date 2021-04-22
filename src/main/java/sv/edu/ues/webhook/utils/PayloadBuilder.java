@@ -13,23 +13,46 @@ public class PayloadBuilder {
                                     Map.of("url", url))));
     }
 
-    public static void buildForProjectInfo(JsonNode node, StringBuilder builder){
-        builder.append(node.get("nombre").asText()).append("\n")
+    public static void buildForProjectInfo(JsonNode node, StringBuilder builder, String carnet, boolean many){
+
+        var tempBuilder = new StringBuilder();
+        tempBuilder.append(node.get("nombre").asText()).append("\n\n")
                 .append("Duracion: ").append(node.get("duracion")).append(" horas\n")
                 .append(node.get("interno").asBoolean()? "Proyecto de tipo interno\n":"Proyecto de tipo externo\n")
                 .append("Tutor: ").append(node.get("personal").asText()).append("\n");
-        builder.append("Estudiantes en el proyecto: ");
+        tempBuilder.append("Estudiantes en el proyecto: ");
+
         var flag = false;
         for(var estudiantes: node.get("estudiantes")){
-            if(flag) builder.append(", ");
-            builder.append(estudiantes.get("carnet").asText());
+            var isActive = estudiantes.get("active").asBoolean();
+            var responseCarnet = estudiantes.get("carnet").asText();
+
+            if(responseCarnet.equalsIgnoreCase(carnet) && !isActive){
+                tempBuilder.setLength(0);  // clears the builder
+                if(many){
+                    tempBuilder.append(node.get("nombre").asText()).append("\n\n");
+                }
+                tempBuilder.append("Estudiante actualmente retirado del proyecto, debe tramitar su nueva incorporación a este con los encargados de su sub-unidad");
+                builder.append(tempBuilder);
+                return;
+            }
+
+            if(flag)
+                tempBuilder.append(", ");
+
+            tempBuilder.append(responseCarnet);
+
+            if(!isActive)
+                tempBuilder.append(" (retirado del proyecto)");
+
             flag = true;
         }
+
         var docs = node.get("documentos");
         if(docs != null) {
             if(!docs.isEmpty()) {
-                builder.append("\n");
-                builder.append("Estado de los documentos requeridos:\n");
+                tempBuilder.append("\n");
+                tempBuilder.append("Estado de los documentos requeridos:\n");
                 for (var documento : docs) {
                     var msg1 = "";
                     if(documento.get("entregado").asBoolean()) {
@@ -42,12 +65,13 @@ public class PayloadBuilder {
                             String.format("- %s, %s%n",
                                     documento.get("nombre").asText().toUpperCase(),
                                     msg1);
-                    builder.append(formattedStr);
+                    tempBuilder.append(formattedStr);
 
                 }
             }
         }
-        builder.append("\n\n");
+        tempBuilder.append("\n\n");
+        builder.append(tempBuilder);
     }
 
 }

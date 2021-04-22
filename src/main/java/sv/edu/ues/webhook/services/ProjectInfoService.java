@@ -92,7 +92,7 @@ public class ProjectInfoService implements ExternalResourcesHandler {
         else{
             var builder = new StringBuilder();
             for(var node: content){
-                PayloadBuilder.buildForProjectInfo(node, builder);
+                PayloadBuilder.buildForProjectInfo(node, builder, carnet, true);
             }
             response.setFulfillmentText(builder.toString());
         }
